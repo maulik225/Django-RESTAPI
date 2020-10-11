@@ -10,15 +10,17 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 
-@csrf_exempt
-@permission_classes([IsAuthenticated])
 class EmployeesTable(APIView):
-
+    
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
     def get(self,request):
         empobj = Employees.objects.all()
         empserializerobj = EmployeesSerializer(empobj,many=True)
         return Response(empserializerobj.data,status=status.HTTP_200_OK)
 
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
     def post(self,request):
         try:
             empserializerobj = EmployeesSerializer(data=request.data)
@@ -27,22 +29,26 @@ class EmployeesTable(APIView):
                 return Response(empserializerobj.data,status=status.HTTP_201_CREATED)
         except Exception:
             return Response(empserializerobj.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
-@csrf_exempt
-@permission_classes([IsAuthenticated])
+
 class EmpUpdatedel(APIView):
 
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
     def get_object(self,pk):
         try:
             return Employees.objects.get(pk=pk)
         except Employees.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
     def get(self,request,pk):
         empobj = self.get_object(pk)
         empserializeobj = EmployeesSerializer(empobj)
         return Response(empserializeobj.data)
-
+    
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
     def put(self,request,pk):
         empobj = self.get_object(pk)
         empserializeobj = EmployeesSerializer(empobj,data=request.data)
@@ -51,6 +57,8 @@ class EmpUpdatedel(APIView):
             return Response(empserializeobj.data,status=status.HTTP_201_CREATED)
         return Response(empserializeobj.errors,status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
     def delete(self,request,pk):
         empobj = self.get_object(pk)
         empobj.delete()
