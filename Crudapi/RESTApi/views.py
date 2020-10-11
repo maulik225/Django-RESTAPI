@@ -10,3 +10,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 
+class EmployeesTable(APIView):
+
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def get(self,request):
+        empobj = Employees.objects.all()
+        empserializerobj = EmployeesSerializer(empobj,many=True)
+        return Response(empserializerobj.data,status=status.HTTP_200_OK)
+
