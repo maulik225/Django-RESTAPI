@@ -64,3 +64,55 @@ class EmpUpdatedel(APIView):
         empobj.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class InventoryTable(APIView):
+
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def get(self,request):
+        Invobj = Inventory.objects.all()
+        invserializerobj = InventorySerializer(Invobj,many=True)
+        return Response(invserializerobj.data)
+    
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def post(self,request):
+        Invserializerobj = InventorySerializer(data=request.data)
+        if Invserializerobj.is_valid():
+            Invserializerobj.save()
+            return Response(Invserializerobj.data,status=status.HTTP_201_CREATED)
+        return Response(Invserializerobj.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class InvUpdatedel(APIView):
+    
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def get_object(self,pk):
+        try:
+            return Inventory.objects.get(pk=pk)
+        except Inventory.DoesNotExist:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def get(self,request,pk):
+        invobj = self.get_object(pk)
+        serializerobj = InventorySerializer(invobj)
+        return Response(serializerobj.data)
+    
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def put(self,request,pk):
+        invobj = self.get_object(pk)
+        invserializerobj = InventorySerializer(invobj,data=request.data)
+        if invserializerobj.is_valid():
+            invserializerobj.save()
+            return Response(invserializerobj.data,status=status.HTTP_200_OK)
+        # print("problem is here")
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def delete(self,request,pk):
+        invobj = self.get_object(pk)
+        invobj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
