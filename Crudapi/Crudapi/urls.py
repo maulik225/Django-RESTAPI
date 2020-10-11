@@ -20,5 +20,7 @@ from RESTApi import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('employees/',views.EmployeesTable.as_view()),
-    path('Emp/<int:pk>',views.EmpUpdatedel.as_view())
+    path('Emp/<int:pk>',views.EmpUpdatedel.as_view()),
+    path('inventory/',views.InventoryTable.as_view()),
+    path('Invt/<int:pk>',views.InvUpdatedel.as_view())
 ]
