@@ -19,3 +19,15 @@ class EmployeesTable(APIView):
         empserializerobj = EmployeesSerializer(empobj,many=True)
         return Response(empserializerobj.data,status=status.HTTP_200_OK)
 
+    @csrf_exempt
+    @permission_classes([IsAuthenticated])
+    def post(self,request):
+        try:
+            empserializerobj = EmployeesSerializer(data=request.data)
+            if empserializerobj.is_valid():
+                empserializerobj.save()
+                return Response(empserializerobj.data,status=status.HTTP_201_CREATED)
+        except Exception:
+            return Response(empserializerobj.errors, safe=False, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
